@@ -25,9 +25,14 @@
                         <button type="button" class="filter-btn" data-filter="completed" aria-pressed="false">Completed</button>
                         <button type="button" class="filter-btn" data-filter="pending" aria-pressed="false">Pending</button>
                     </nav>
-            <section aria-label="Task list">
-                <ul id="task-list" tabindex="0"></ul>
-            </section>
+                        <section aria-label="Task list">
+                                <ul id="task-list" tabindex="0"></ul>
+                                                <nav class="pager-nav" aria-label="Task list pagination">
+                                                    <button id="prev-page" type="button" aria-label="Previous page">&lt; Prev</button>
+                                                    <span id="page-buttons"></span>
+                                                    <button id="next-page" type="button" aria-label="Next page">Next &gt;</button>
+                                                </nav>
+                        </section>
         </main>
 </body>
 </html>

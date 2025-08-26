@@ -1,3 +1,30 @@
+.pager-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.pager-nav button {
+  background: #e6f0ff;
+  color: var(--primary);
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.pager-nav button:focus {
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.pager-nav button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 .dark-mode {
   --primary: #90caf9;
   --danger: #ff8a65;

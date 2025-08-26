@@ -1,3 +1,57 @@
+// Pager event listeners
+const prevBtn = document.getElementById('prev-page');
+const nextBtn = document.getElementById('next-page');
+if (prevBtn) {
+  prevBtn.addEventListener('click', function() {
+    if (currentPage > 1) {
+      currentPage--;
+      renderTasks();
+    }
+  });
+}
+if (nextBtn) {
+  nextBtn.addEventListener('click', function() {
+    let filteredTasks = tasks;
+    if (currentFilter === 'completed') filteredTasks = tasks.filter(t => t.completed);
+    else if (currentFilter === 'pending') filteredTasks = tasks.filter(t => !t.completed);
+    const totalPages = Math.max(1, Math.ceil(filteredTasks.length / PAGE_SIZE));
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderTasks();
+    }
+  });
+}
+// Backend integration functions
+async function loadTasks() {
+  const res = await fetch('http://localhost:3001/tasks');
+  tasks = await res.json();
+  renderTasks();
+}
+
+async function addTask(text) {
+  await fetch('http://localhost:3001/tasks', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+}
+
+async function deleteTask(idx) {
+  const task = tasks[idx];
+  await fetch(`http://localhost:3001/tasks/${task.id}`, { method: 'DELETE' });
+  await loadTasks();
+}
+
+async function toggleComplete(idx) {
+  const task = tasks[idx];
+  const completed = !task.completed;
+  await fetch(`http://localhost:3001/tasks/${task.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ completed })
+  });
+  await loadTasks();
+}
 // Dark mode toggle
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 
@@ -20,34 +74,16 @@ if (darkModeToggle) {
 // Load dark mode preference
 const darkPref = localStorage.getItem('darkMode');
 if (darkPref === '1') setDarkMode(true);
-let tasks = [];
+
+// DOM element references
 const taskForm = document.getElementById('task-form');
 const taskInput = document.getElementById('task-input');
 const taskList = document.getElementById('task-list');
 const filterNav = document.querySelector('.filter-nav');
+let tasks = [];
 let currentFilter = 'all';
-
-// Load tasks from localStorage
-function loadTasks() {
-  const saved = localStorage.getItem('tasks');
-  if (saved) {
-    try {
-      tasks = JSON.parse(saved);
-    } catch {
-      tasks = [];
-    }
-  }
-}
-
-// Save tasks to localStorage
-function saveTasks() {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-
-// Initialize app
-loadTasks();
-renderTasks();
-
+let currentPage = 1;
+const PAGE_SIZE = 5;
 function renderTasks() {
   taskList.innerHTML = '';
   let filteredTasks = tasks;
@@ -56,7 +92,15 @@ function renderTasks() {
   } else if (currentFilter === 'pending') {
     filteredTasks = tasks.filter(t => !t.completed);
   }
-  filteredTasks.forEach((task, idx) => {
+
+  // Pagination logic
+  const totalPages = Math.max(1, Math.ceil(filteredTasks.length / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  const startIdx = (currentPage - 1) * PAGE_SIZE;
+  const endIdx = startIdx + PAGE_SIZE;
+  const pageTasks = filteredTasks.slice(startIdx, endIdx);
+
+  pageTasks.forEach((task, idx) => {
     const li = document.createElement('li');
     li.className = 'task-item' + (task.completed ? ' completed' : '');
     li.setAttribute('role', 'listitem');
@@ -70,7 +114,6 @@ function renderTasks() {
 
     const completeBtn = document.createElement('button');
     completeBtn.className = 'complete-btn';
-  saveTasks();
     completeBtn.setAttribute('aria-label', task.completed ? 'Mark as incomplete' : 'Mark as completed');
     completeBtn.innerHTML = task.completed ? '↩️' : '✔️';
     completeBtn.onclick = () => toggleComplete(tasks.indexOf(task));
@@ -78,7 +121,6 @@ function renderTasks() {
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'delete-btn';
     deleteBtn.setAttribute('aria-label', 'Delete task');
-        saveTasks();
     deleteBtn.innerHTML = '🗑️';
     deleteBtn.onclick = () => deleteTask(tasks.indexOf(task));
 
@@ -89,25 +131,33 @@ function renderTasks() {
     li.appendChild(actions);
     taskList.appendChild(li);
   });
+
+  // Update pager controls
+  const pageButtons = document.getElementById('page-buttons');
+  const prevBtn = document.getElementById('prev-page');
+  const nextBtn = document.getElementById('next-page');
+  if (pageButtons) {
+    pageButtons.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = i;
+      btn.className = 'page-btn';
+      btn.disabled = i === currentPage;
+      btn.setAttribute('aria-label', `Go to page ${i}`);
+      btn.onclick = () => {
+        currentPage = i;
+        renderTasks();
+      };
+      pageButtons.appendChild(btn);
+    }
+  }
+  if (prevBtn) prevBtn.disabled = currentPage === 1;
 }
 
-function addTask(text) {
-  tasks.push({ text, completed: false });
-  renderTasks();
-}
 
-      loadTasks();
-function deleteTask(idx) {
-  tasks.splice(idx, 1);
-  renderTasks();
-}
 
-function toggleComplete(idx) {
-  tasks[idx].completed = !tasks[idx].completed;
-  renderTasks();
-}
-
-taskForm.addEventListener('submit', function(e) {
+taskForm.addEventListener('submit', async function(e) {
   e.preventDefault();
   const value = taskInput.value.trim();
   if (value.length === 0) {
@@ -121,7 +171,8 @@ taskForm.addEventListener('submit', function(e) {
     taskInput.setAttribute('aria-invalid', 'false');
     taskInput.setCustomValidity('');
   }
-  addTask(value);
+  await addTask(value);
+  await loadTasks();
   taskInput.value = '';
   taskInput.focus();
 });
@@ -151,4 +202,6 @@ taskList.addEventListener('keydown', function(e) {
   }
 });
 
-renderTasks();
+
+// Initial load from backend
+loadTasks();
