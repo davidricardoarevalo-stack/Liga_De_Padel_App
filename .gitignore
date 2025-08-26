@@ -1,0 +1,12 @@
+# Node modules
+node_modules/
+
+# SQLite DB (remove this line if you want to track your DB file)
+# backend/tasks.db
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
