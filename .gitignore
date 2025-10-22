@@ -1,8 +1,14 @@
 # Node modules
 node_modules/
 
-# SQLite DB (remove this line if you want to track your DB file)
-# backend/tasks.db
+# Also ignore node_modules inside subprojects
+frontend/mobile-app/node_modules/
+web-app/node_modules/
+backend/node_modules/
+
+# Local DB files (do not track local sqlite DBs)
+backend/users.db
+users.db
 
 # Logs
 *.log

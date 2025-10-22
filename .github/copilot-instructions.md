@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Project general coding guidelines
 
 ## Code Style
@@ -14,3 +15,17 @@
 - Use meaningful variable and function names that clearly describe their purpose
 - Include helpful comments for complex logic
 - Add error handling for user inputs and API calls
+=======
+# Copilot Instructions
+
+- Proyecto con frontend (React web y Expo React Native mobile) y backend (Node.js Express + SQLite).
+- Módulo de acceso: login con email y password.
+- Backend expone endpoints /login y /register.
+- Frontend debe consumir estos endpoints.
+- Estructura:
+  - backend/
+  - frontend/web-app/
+  - frontend/mobile-app/
+
+Sigue el checklist de desarrollo y mantén la documentación actualizada.
+>>>>>>> origin/from-local-20251022-165548
