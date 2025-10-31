@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Despliegue - Liga de Padel en Bluehost</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #7f8c8d;
+            margin-top: 25px;
+        }
+        .step {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #f39c12;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #27ae60;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .checklist {
+            background: #e8f5e8;
+            padding: 15px;
+            border-left: 4px solid #27ae60;
+            margin: 10px 0;
+        }
+        ul, ol {
+            padding-left: 20px;
+        }
+        li {
+            margin: 5px 0;
+        }
+        .file-structure {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            font-family: monospace;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .badge {
+            background: #3498db;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+        }
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Guía de Despliegue<br>Liga de Padel en Bluehost</h1>
+        
+        <div class="success">
+            <strong>✅ Aplicación:</strong> Liga de Padel - Sistema de Gestión<br>
+            <strong>🌐 Dominio:</strong> ligadepadeldebogotaoficial.com/LPBApp<br>
+            <strong>📅 Fecha:</strong> Octubre 2025<br>
+            <strong>⚡ Stack:</strong> React + PHP/Lumen + MySQL
+        </div>
+
+        <h2>📋 Requisitos Previos</h2>
+        <div class="checklist">
+            <h3>En Bluehost necesitas:</h3>
+            <ul>
+                <li>✅ Hosting con soporte PHP 7.4+</li>
+                <li>✅ Base de datos MySQL</li>
+                <li>✅ Acceso a phpMyAdmin</li>
+                <li>✅ Acceso a File Manager o FTP</li>
+                <li>✅ Dominio configurado</li>
+            </ul>
+        </div>
+
+        <h2>🔄 Proceso de Despliegue Completo</h2>
+
+        <h3>PASO 1: Preparar Frontend (React)</h3>
+        <div class="step">
+            <p><strong>Acción:</strong> Generar build de producción</p>
+            <div class="code">cd web-app<br>npm run build</div>
+            <p>Esto genera la carpeta <code>build/</code> con archivos estáticos optimizados para producción.</p>
+        </div>
+
+        <h3>PASO 2: Configurar Base de Datos MySQL</h3>
+        <div class="step">
+            <h4>2.1 Crear Base de Datos en Bluehost:</h4>
+            <ol>
+                <li>Ir a <strong>cPanel > MySQL Databases</strong></li>
+                <li>Crear nueva base de datos: <code>ajkyinmy_liga_padel_app</code></li>
+                <li>Crear usuario MySQL: <code>ajkyinmy_user_app</code></li>
+                <li>Asignar permisos completos al usuario</li>
+                <li>Anotar credenciales para configuración</li>
+            </ol>
+
+            <h4>2.2 Importar Estructura de Base de Datos:</h4>
+            <ol>
+                <li>Abrir <strong>phpMyAdmin</strong> en cPanel</li>
+                <li>Seleccionar la base de datos creada</li>
+                <li>Ir a pestaña <strong>"Import"</strong></li>
+                <li>Subir archivo <code>database_production.sql</code></li>
+                <li>Ejecutar importación</li>
+            </ol>
+
+            <div class="warning">
+                <strong>⚠️ Importante:</strong> Verificar que todas las tablas se crearon correctamente:
+                users, clubs, athletes, tournaments
+            </div>
+        </div>
+
+        <h3>PASO 3: Configurar Backend (PHP/Lumen)</h3>
+        <div class="step">
+            <h4>3.1 Configuración de Producción (.env):</h4>
+            <p>El archivo <code>api/.env.production</code> debe contener:</p>
+            <div class="code">
+# Configuración Base de Datos<br>
+DB_CONNECTION=mysql<br>
+DB_HOST=localhost<br>
+DB_PORT=3306<br>
+DB_DATABASE=ajkyinmy_liga_padel_app<br>
+DB_USERNAME=ajkyinmy_user_app<br>
+DB_PASSWORD=pwd_l1g4_app<br><br>
+
+# Configuración Aplicación<br>
+APP_NAME="Liga de Padel"<br>
+APP_ENV=production<br>
+APP_DEBUG=false<br>
+APP_URL=https://ligadepadeldebogotaoficial.com/LPBApp<br>
+APP_TIMEZONE=America/Bogota<br><br>
+
+# Seguridad<br>
+APP_KEY=base64:TU_CLAVE_SEGURA_AQUI<br><br>
+
+# CORS para producción<br>
+CORS_ALLOWED_ORIGINS=https://ligadepadeldebogotaoficial.com
+            </div>
+
+            <h4>3.2 Generar APP_KEY Segura:</h4>
+            <p>Usar generador online o comando PHP para crear clave de 32 caracteres.</p>
+        </div>
+
+        <h3>PASO 4: Estructura de Archivos en Servidor</h3>
+        <div class="step">
+            <h4>Estructura final en public_html/LPBApp:</h4>
+            <div class="file-structure">
+public_html/LPBApp/<br>
+├── index.html              (del build de React)<br>
+├── static/                 (CSS/JS de React)<br>
+│   ├── css/<br>
+│   └── js/<br>
+├── manifest.json          (del build de React)<br>
+├── favicon.ico<br>
+├── .htaccess              (redirecciones principales)<br>
+└── api/                   (Backend PHP)<br>
+    ├── app/<br>
+    ├── public/<br>
+    ├── vendor/            (dependencias PHP)<br>
+    ├── .env               (configuración producción)<br>
+    └── .htaccess          (configuración API)
+            </div>
+
+            <h4>4.1 Subir archivos vía File Manager:</h4>
+            <ol>
+                <li>Acceder a <strong>cPanel > File Manager</strong></li>
+                <li>Navegar a <code>public_html/LPBApp/</code></li>
+                <li>Subir contenido de <code>web-app/build/</code> a la raíz de LPBApp</li>
+                <li>Crear carpeta <code>api/</code></li>
+                <li>Subir contenido completo de <code>api/</code> a <code>public_html/LPBApp/api/</code></li>
+                <li>Renombrar <code>.env.production</code> a <code>.env</code></li>
+            </ol>
+        </div>
+
+        <h3>PASO 5: Configurar Permisos de Archivos</h3>
+        <div class="step">
+            <p>Establecer permisos correctos en File Manager:</p>
+            <div class="code">
+chmod 755 public_html/LPBApp/api/storage<br>
+chmod 755 public_html/LPBApp/api/bootstrap/cache<br>
+chmod 644 public_html/LPBApp/api/.env<br>
+chmod 644 public_html/LPBApp/.htaccess<br>
+chmod 644 public_html/LPBApp/api/.htaccess
+            </div>
+        </div>
+
+        <h3>PASO 6: Configurar Redirecciones (.htaccess)</h3>
+        <div class="step">
+            <h4>.htaccess principal (en LPBApp/):</h4>
+            <div class="code">
+Options -MultiViews -Indexes<br>
+RewriteEngine On<br><br>
+
+# API Routes<br>
+RewriteCond %{REQUEST_URI} ^/LPBApp/api<br>
+RewriteRule ^api/(.*)$ api/public/index.php [QSA,L]<br><br>
+
+# React App (SPA)<br>
+RewriteCond %{REQUEST_FILENAME} !-f<br>
+RewriteCond %{REQUEST_FILENAME} !-d<br>
+RewriteCond %{REQUEST_URI} !^/LPBApp/api<br>
+RewriteRule . /LPBApp/index.html [L]
+            </div>
+        </div>
+
+        <h3>PASO 7: Verificar Funcionamiento</h3>
+        <div class="step">
+            <h4>7.1 Probar API Backend:</h4>
+            <div class="code">https://ligadepadeldebogotaoficial.com/LPBApp/api/users</div>
+            <p>Debería retornar JSON con datos de usuarios</p>
+
+            <h4>7.2 Probar Frontend:</h4>
+            <div class="code">https://ligadepadeldebogotaoficial.com/LPBApp</div>
+            <p>Debería cargar la aplicación React completa</p>
+
+            <h4>7.3 Probar Login del Sistema:</h4>
+            <ul>
+                <li><strong>Email:</strong> app@app.com</li>
+                <li><strong>Password:</strong> 123</li>
+            </ul>
+        </div>
+
+        <h2>🛠️ Solución de Problemas Comunes</h2>
+        
+        <h3>Error 500 - Internal Server Error</h3>
+        <div class="step">
+            <ul>
+                <li>✅ Verificar permisos de carpetas storage/ y cache/</li>
+                <li>✅ Revisar logs de error en cPanel > Error Logs</li>
+                <li>✅ Verificar configuración .env (credenciales DB)</li>
+                <li>✅ Comprobar que vendor/ existe (dependencias PHP)</li>
+            </ul>
+        </div>
+
+        <h3>Frontend no carga</h3>
+        <div class="step">
+            <ul>
+                <li>✅ Verificar que index.html esté en raíz de LPBApp/</li>
+                <li>✅ Revisar .htaccess para redirección SPA</li>
+                <li>✅ Verificar rutas de archivos estáticos (/static/)</li>
+                <li>✅ Comprobar configuración de URL base</li>
+            </ul>
+        </div>
+
+        <h3>API no responde</h3>
+        <div class="step">
+            <ul>
+                <li>✅ Verificar ruta /LPBApp/api/ en .htaccess</li>
+                <li>✅ Comprobar conexión a base de datos</li>
+                <li>✅ Verificar que public/index.php existe</li>
+                <li>✅ Revisar configuración CORS</li>
+            </ul>
+        </div>
+
+        <h3>Base de datos no conecta</h3>
+        <div class="step">
+            <ul>
+                <li>✅ Verificar credenciales exactas en .env</li>
+                <li>✅ Verificar permisos de usuario MySQL</li>
+                <li>✅ Comprobar nombre exacto de base de datos</li>
+                <li>✅ Probar conexión desde phpMyAdmin</li>
+            </ul>
+        </div>
+
+        <h2>📱 URLs de Producción Final</h2>
+        <div class="success">
+            <ul>
+                <li><strong>🌐 Frontend:</strong> https://ligadepadeldebogotaoficial.com/LPBApp</li>
+                <li><strong>🔌 API:</strong> https://ligadepadeldebogotaoficial.com/LPBApp/api</li>
+                <li><strong>🗄️ Base de Datos:</strong> ajkyinmy_liga_padel_app</li>
+                <li><strong>👤 Login Admin:</strong> app@app.com / 123</li>
+            </ul>
+        </div>
+
+        <h2>🔒 Seguridad Post-Despliegue</h2>
+        <div class="checklist">
+            <h3>Tareas de Seguridad Obligatorias:</h3>
+            <ol>
+                <li><strong>Cambiar contraseña de administrador:</strong>
+                    <ul>
+                        <li>Login con app@app.com / 123</li>
+                        <li>Ir a gestión de usuarios</li>
+                        <li>Cambiar a contraseña segura (8+ caracteres, mayúsculas, números, símbolos)</li>
+                    </ul>
+                </li>
+                <li><strong>Configurar HTTPS:</strong>
+                    <ul>
+                        <li>Activar SSL en cPanel de Bluehost</li>
+                        <li>Forzar redirección HTTPS en .htaccess</li>
+                    </ul>
+                </li>
+                <li><strong>Configurar backups automáticos:</strong>
+                    <ul>
+                        <li>Activar backups en cPanel</li>
+                        <li>Programar backup de base de datos semanal</li>
+                    </ul>
+                </li>
+                <li><strong>Generar APP_KEY segura:</strong>
+                    <ul>
+                        <li>Reemplazar "GENERATE_NEW_KEY_FOR_PRODUCTION"</li>
+                        <li>Usar clave de 32 caracteres única</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <h2>✨ Características de la Aplicación</h2>
+        <div class="step">
+            <h3>Funcionalidades Implementadas:</h3>
+            <ul>
+                <li><span class="badge">Frontend</span> Diseño completamente responsivo</li>
+                <li><span class="badge">Mobile</span> Sin scroll horizontal en dispositivos móviles</li>
+                <li><span class="badge">UX</span> Tablas optimizadas para todas las pantallas</li>
+                <li><span class="badge">Auth</span> Sistema de autenticación JWT</li>
+                <li><span class="badge">CRUD</span> Gestión completa de usuarios, deportistas, clubes, torneos</li>
+                <li><span class="badge">Filters</span> Filtros inteligentes y búsquedas</li>
+                <li><span class="badge">Security</span> Roles y permisos por usuario</li>
+            </ul>
+
+            <h3>Roles de Usuario:</h3>
+            <ul>
+                <li><strong>Administrador:</strong> Acceso completo a todas las funciones</li>
+                <li><strong>Asistente:</strong> Gestión de deportistas y torneos</li>
+                <li><strong>Club:</strong> Gestión de sus propios deportistas</li>
+                <li><strong>Deportista:</strong> Vista de información personal</li>
+            </ul>
+        </div>
+
+        <h2>📞 Soporte y Mantenimiento</h2>
+        <div class="step">
+            <h3>En caso de problemas:</h3>
+            <ol>
+                <li><strong>Revisar logs de error:</strong> cPanel > Error Logs</li>
+                <li><strong>Verificar configuración:</strong> Seguir checklist paso a paso</li>
+                <li><strong>Probar componentes por separado:</strong> API, Frontend, Base de datos</li>
+                <li><strong>Backup antes de cambios:</strong> Siempre hacer respaldo</li>
+            </ol>
+
+            <h3>Mantenimiento Recomendado:</h3>
+            <ul>
+                <li>📅 <strong>Semanal:</strong> Verificar logs de error</li>
+                <li>📅 <strong>Mensual:</strong> Backup completo de base de datos</li>
+                <li>📅 <strong>Trimestral:</strong> Actualizar dependencias de seguridad</li>
+                <li>📅 <strong>Anual:</strong> Renovar certificados SSL</li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <h2>🎉 ¡Despliegue Completado!</h2>
+            <p><strong>Tu aplicación Liga de Padel está lista para producción en Bluehost con todas las mejoras responsivas y de seguridad implementadas.</strong></p>
+            <p>URL: <code>https://ligadepadeldebogotaoficial.com/LPBApp</code></p>
+        </div>
+
+        <hr style="margin: 30px 0; border: none; border-top: 2px solid #3498db;">
+        <div style="text-align: center; color: #7f8c8d; font-size: 0.9em;">
+            <p><strong>Liga de Padel de Bogotá Oficial</strong><br>
+            Guía de Despliegue Técnico - Octubre 2025<br>
+            React + PHP/Lumen + MySQL en Bluehost</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+Options -MultiViews -Indexes
+RewriteEngine On
+
+# Forzar HTTPS en producción (descomentar cuando tengas SSL activo)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# API Routes - Dirigir /LPBApp/api/* al backend PHP
+RewriteCond %{REQUEST_URI} ^/LPBApp/api
+RewriteRule ^api/(.*)$ api/public/index.php [QSA,L]
+
+# React App (SPA) - Todas las demás rutas van al index.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/LPBApp/api
+RewriteRule . /LPBApp/index.html [L]
+
+# Configuración de seguridad
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.log">
+    Order allow,deny  
+    Deny from all
+</Files>
+
+# Configuración de cache para archivos estáticos
+<IfModule mod_expires.c>
+    ExpiresActive on
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>

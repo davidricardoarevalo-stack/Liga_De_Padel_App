@@ -1,0 +1,57 @@
+SOLUCIÓN AL ERROR 404 EN LOGIN - GUÍA COMPLETA
+
+PROBLEMA IDENTIFICADO:
+❌ El frontend estaba intentando conectarse a '/api' pero debería ser '/LPBApp/api'
+
+SOLUCIÓN APLICADA:
+✅ 1. Corregido config.js: backendUrl = '/LPBApp/api' (en lugar de '/api')
+✅ 2. Reconstruido build con configuración actualizada
+
+CHECKLIST PARA DESPLIEGUE EN BLUEHOST:
+
+📁 ESTRUCTURA REQUERIDA EN public_html/LPBApp/:
+├── index.html ✅ (actualizado con nueva configuración)
+├── static/
+│   ├── css/
+│   └── js/ ✅ (main.88fd284a.js - nuevo build)
+├── manifest.json
+├── favicon.ico
+├── .htaccess ✅ (configuración para React SPA y API routing)
+└── api/
+    ├── public/
+    │   └── index.php ✅ (punto de entrada del backend)
+    ├── app/
+    ├── vendor/
+    ├── .env ✅ (configuración de producción con BD)
+    └── .htaccess ✅ (rewrite rules para PHP)
+
+🔧 VERIFICACIONES NECESARIAS:
+
+1. SUBIR ARCHIVOS ACTUALIZADOS:
+   - TODO el contenido de web-app/build/ → public_html/LPBApp/
+   - .htaccess (del proyecto raíz) → public_html/LPBApp/
+   - Carpeta api/ completa → public_html/LPBApp/api/
+
+2. CONFIGURAR BASE DE DATOS:
+   - Crear base de datos: ajkyinmy_liga_padel_app
+   - Importar: database_production.sql
+   - Verificar credenciales en api/.env
+
+3. VERIFICAR PERMISOS:
+   - Archivos: 644
+   - Directorios: 755
+
+4. PROBAR ENDPOINTS:
+   - Frontend: https://ligadepadeldebogotaoficial.com/LPBApp/
+   - API Test: https://ligadepadeldebogotaoficial.com/LPBApp/api/
+   - Login Test: https://ligadepadeldebogotaoficial.com/LPBApp/api/login
+
+RUTAS CORREGIDAS:
+✅ Frontend ahora apunta a: /LPBApp/api/login
+✅ .htaccess redirige /LPBApp/api/* a api/public/index.php
+✅ Backend configurado para el subdirectorio
+
+NEXT STEPS:
+1. Subir build actualizado al servidor
+2. Verificar que api/ está presente y configurada
+3. Probar login nuevamente

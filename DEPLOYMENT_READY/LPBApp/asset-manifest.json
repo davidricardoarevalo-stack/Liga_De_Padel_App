@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/LPBApp/static/css/main.f855e6bc.css",
+    "main.js": "/LPBApp/static/js/main.88fd284a.js",
+    "static/js/453.8ca8cbf8.chunk.js": "/LPBApp/static/js/453.8ca8cbf8.chunk.js",
+    "index.html": "/LPBApp/index.html",
+    "main.f855e6bc.css.map": "/LPBApp/static/css/main.f855e6bc.css.map",
+    "main.88fd284a.js.map": "/LPBApp/static/js/main.88fd284a.js.map",
+    "453.8ca8cbf8.chunk.js.map": "/LPBApp/static/js/453.8ca8cbf8.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.88fd284a.js"
+  ]
+}

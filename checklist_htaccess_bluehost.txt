@@ -1,0 +1,50 @@
+CHECKLIST DE VERIFICACIÓN .htaccess EN BLUEHOST:
+
+✓ PASO 1: Habilitar archivos ocultos en File Manager
+  - Settings > Show Hidden Files (dot files)
+  - Refrescar la vista
+
+✓ PASO 2: Verificar ubicaciones correctas:
+  - /public_html/LPBApp/.htaccess (archivo principal)
+  - /public_html/LPBApp/api/.htaccess (archivo del backend)
+
+✓ PASO 3: Probar funcionamiento:
+  - Acceder a tu dominio/LPBApp
+  - Debería cargar la aplicación React
+  - Acceder a tu dominio/LPBApp/api/health (si tienes endpoint de salud)
+
+✓ PASO 4: Si no funciona, revisar:
+  - Error Logs en cPanel
+  - Apache Error Logs
+  - Verificar que mod_rewrite esté habilitado
+
+CONTENIDO .htaccess PRINCIPAL (raíz LPBApp):
+```
+Options -MultiViews -Indexes
+RewriteEngine On
+
+# API Routes
+RewriteCond %{REQUEST_URI} ^/LPBApp/api
+RewriteRule ^api/(.*)$ api/public/index.php [QSA,L]
+
+# React SPA
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d  
+RewriteCond %{REQUEST_URI} !^/LPBApp/api
+RewriteRule . /LPBApp/index.html [L]
+```
+
+CONTENIDO .htaccess API (directorio api):
+```
+Options -MultiViews -Indexes
+RewriteEngine On
+
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ public/index.php [L]
+```

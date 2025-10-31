@@ -1,0 +1,48 @@
+SOLUCIÓN AL PROBLEMA DE DESPLIEGUE EN PRODUCCIÓN
+
+PROBLEMA IDENTIFICADO:
+❌ El build de React tenía rutas absolutas (/static/js/...) en lugar de rutas relativas para subdirectorio (/LPBApp/static/js/...)
+
+SOLUCIÓN APLICADA:
+✅ 1. Configurado package.json con "homepage": "/LPBApp"
+✅ 2. Regenerado build con PUBLIC_URL=/LPBApp 
+✅ 3. Corregido archivo .htaccess (eliminadas líneas duplicadas)
+
+PASOS PARA COMPLETAR EL DESPLIEGUE:
+
+1. SUBIR ARCHIVOS ACTUALIZADOS AL SERVIDOR:
+   - Subir TODO el contenido de web-app/build/ a public_html/LPBApp/
+   - Sobrescribir los archivos existentes
+   - Verificar que se mantiene la carpeta api/
+
+2. SUBIR .htaccess CORREGIDO:
+   - Subir el .htaccess actualizado a public_html/LPBApp/
+   - Verificar que no hay líneas duplicadas
+
+3. VERIFICAR ESTRUCTURA EN EL SERVIDOR:
+   public_html/LPBApp/
+   ├── index.html ✓ (con rutas /LPBApp/static/...)
+   ├── static/
+   │   ├── css/
+   │   └── js/
+   ├── manifest.json
+   ├── favicon.ico
+   ├── .htaccess ✓ (sin duplicados)
+   └── api/
+       ├── public/
+       ├── app/
+       ├── vendor/
+       ├── .env
+       └── .htaccess
+
+4. PROBAR LA APLICACIÓN:
+   - https://ligadepadeldebogotaoficial.com/LPBApp/
+   - Debería cargar la aplicación React
+   - Las rutas internas deberían funcionar correctamente
+
+ARCHIVOS CLAVE ACTUALIZADOS:
+- web-app/build/index.html (rutas corregidas)
+- .htaccess (sin duplicados)
+- package.json (homepage configurado)
+
+¡Después de subir estos archivos actualizados, la aplicación debería funcionar correctamente!

@@ -1,0 +1,15 @@
+RewriteEngine On
+
+# API Routes - Específico para subdirectorio LPBApp
+RewriteCond %{REQUEST_URI} ^/LPBApp/api
+RewriteRule ^api/(.*)$ api/public/index.php [QSA,L]
+
+# React App (SPA) - Para subdirectorio LPBApp
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} ^/LPBApp
+RewriteRule . /LPBApp/index.html [L]
+
+# Fallback for direct access to LPBApp
+RewriteCond %{REQUEST_URI} !^/LPBApp
+RewriteRule ^(.*)$ /LPBApp/$1 [R=301,L]

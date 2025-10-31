@@ -1,0 +1,26 @@
+CHECKLIST DE VERIFICACIÓN EN BLUEHOST:
+
+1. ESTRUCTURA CORRECTA EN public_html/LPBApp/:
+   ✓ index.html (archivo principal de React)
+   ✓ static/ (carpeta con CSS, JS compilados)
+   ✓ manifest.json
+   ✓ favicon.ico
+   ✓ .htaccess (archivo de configuración Apache)
+   ✓ api/ (carpeta del backend PHP)
+
+2. ESTRUCTURA EN public_html/LPBApp/api/:
+   ✓ public/ (con index.php)
+   ✓ app/
+   ✓ vendor/
+   ✓ .env
+   ✓ .htaccess
+
+3. VERIFICACIONES INMEDIATAS:
+   - Acceder directamente: https://ligadepadeldebogotaoficial.com/LPBApp/index.html
+   - Verificar: https://ligadepadeldebogotaoficial.com/LPBApp/static/
+   - Verificar: https://ligadepadeldebogotaoficial.com/LPBApp/api/
+
+4. PERMISOS REQUERIDOS:
+   - Directorios: 755
+   - Archivos: 644
+   - .htaccess: 644

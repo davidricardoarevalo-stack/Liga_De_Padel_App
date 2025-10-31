@@ -1,0 +1,238 @@
+GUÍA DE DESPLIEGUE - LIGA DE PADEL EN BLUEHOST
+======================================================
+
+INFORMACIÓN DEL PROYECTO:
+- Aplicación: Liga de Padel - Sistema de Gestión
+- Dominio: ligadepadeldebogotaoficial.com/LPBApp
+- Fecha: Octubre 2025
+- Stack Tecnológico: React + PHP/Lumen + MySQL
+
+REQUISITOS PREVIOS EN BLUEHOST:
+- Hosting con soporte PHP 7.4+
+- Base de datos MySQL
+- Acceso a phpMyAdmin
+- Acceso a File Manager o FTP
+- Dominio configurado
+
+PROCESO DE DESPLIEGUE COMPLETO:
+
+PASO 1: PREPARAR FRONTEND (REACT)
+---------------------------------
+Acción: Generar build de producción
+
+Comandos a ejecutar:
+cd web-app
+npm run build
+
+Resultado: Se genera la carpeta build/ con archivos estáticos optimizados.
+
+PASO 2: CONFIGURAR BASE DE DATOS MYSQL
+--------------------------------------
+2.1 Crear Base de Datos en Bluehost:
+1. Ir a cPanel > MySQL Databases
+2. Crear nueva base de datos: ajkyinmy_liga_padel_app
+3. Crear usuario MySQL: ajkyinmy_user_app
+4. Asignar permisos completos al usuario
+5. Anotar credenciales para configuración
+
+2.2 Importar Estructura de Base de Datos:
+1. Abrir phpMyAdmin en cPanel
+2. Seleccionar la base de datos creada
+3. Ir a pestaña "Import"
+4. Subir archivo database_production.sql
+5. Ejecutar importación
+
+IMPORTANTE: Verificar que se crearon las tablas: users, clubs, athletes, tournaments
+
+PASO 3: CONFIGURAR BACKEND (PHP/LUMEN)
+--------------------------------------
+3.1 Configuración de Producción (.env):
+
+El archivo api/.env.production debe contener:
+
+# Configuración Base de Datos
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=ajkyinmy_liga_padel_app
+DB_USERNAME=ajkyinmy_user_app
+DB_PASSWORD=pwd_l1g4_app
+
+# Configuración Aplicación
+APP_NAME="Liga de Padel"
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://ligadepadeldebogotaoficial.com/LPBApp
+APP_TIMEZONE=America/Bogota
+
+# Seguridad
+APP_KEY=base64:TU_CLAVE_SEGURA_AQUI
+
+# CORS para producción
+CORS_ALLOWED_ORIGINS=https://ligadepadeldebogotaoficial.com
+
+3.2 Generar APP_KEY Segura:
+Usar generador online o comando PHP para crear clave de 32 caracteres.
+
+PASO 4: ESTRUCTURA DE ARCHIVOS EN SERVIDOR
+------------------------------------------
+Estructura final en public_html/LPBApp:
+
+public_html/LPBApp/
+├── index.html              (del build de React)
+├── static/                 (CSS/JS de React)
+│   ├── css/
+│   └── js/
+├── manifest.json          (del build de React)
+├── favicon.ico
+├── .htaccess              (redirecciones principales)
+└── api/                   (Backend PHP)
+    ├── app/
+    ├── public/
+    ├── vendor/            (dependencias PHP)
+    ├── .env               (configuración producción)
+    └── .htaccess          (configuración API)
+
+4.1 Subir archivos vía File Manager:
+1. Acceder a cPanel > File Manager
+2. Navegar a public_html/LPBApp/
+3. Subir contenido de web-app/build/ a la raíz de LPBApp
+4. Crear carpeta api/
+5. Subir contenido completo de api/ a public_html/LPBApp/api/
+6. Renombrar .env.production a .env
+
+PASO 5: CONFIGURAR PERMISOS DE ARCHIVOS
+---------------------------------------
+Establecer permisos correctos en File Manager:
+
+chmod 755 public_html/LPBApp/api/storage
+chmod 755 public_html/LPBApp/api/bootstrap/cache
+chmod 644 public_html/LPBApp/api/.env
+chmod 644 public_html/LPBApp/.htaccess
+chmod 644 public_html/LPBApp/api/.htaccess
+
+PASO 6: CONFIGURAR REDIRECCIONES (.htaccess)
+--------------------------------------------
+.htaccess principal (en LPBApp/):
+
+Options -MultiViews -Indexes
+RewriteEngine On
+
+# API Routes
+RewriteCond %{REQUEST_URI} ^/LPBApp/api
+RewriteRule ^api/(.*)$ api/public/index.php [QSA,L]
+
+# React App (SPA)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/LPBApp/api
+RewriteRule . /LPBApp/index.html [L]
+
+PASO 7: VERIFICAR FUNCIONAMIENTO
+--------------------------------
+7.1 Probar API Backend:
+URL: https://ligadepadeldebogotaoficial.com/LPBApp/api/users
+Resultado esperado: JSON con datos de usuarios
+
+7.2 Probar Frontend:
+URL: https://ligadepadeldebogotaoficial.com/LPBApp
+Resultado esperado: Aplicación React completa
+
+7.3 Probar Login del Sistema:
+Email: app@app.com
+Password: 123
+
+SOLUCIÓN DE PROBLEMAS COMUNES:
+
+Error 500 - Internal Server Error:
+- Verificar permisos de carpetas storage/ y cache/
+- Revisar logs de error en cPanel > Error Logs
+- Verificar configuración .env (credenciales DB)
+- Comprobar que vendor/ existe (dependencias PHP)
+
+Frontend no carga:
+- Verificar que index.html esté en raíz de LPBApp/
+- Revisar .htaccess para redirección SPA
+- Verificar rutas de archivos estáticos (/static/)
+- Comprobar configuración de URL base
+
+API no responde:
+- Verificar ruta /LPBApp/api/ en .htaccess
+- Comprobar conexión a base de datos
+- Verificar que public/index.php existe
+- Revisar configuración CORS
+
+Base de datos no conecta:
+- Verificar credenciales exactas en .env
+- Verificar permisos de usuario MySQL
+- Comprobar nombre exacto de base de datos
+- Probar conexión desde phpMyAdmin
+
+URLS DE PRODUCCIÓN FINAL:
+
+Frontend: https://ligadepadeldebogotaoficial.com/LPBApp
+API: https://ligadepadeldebogotaoficial.com/LPBApp/api
+Base de Datos: ajkyinmy_liga_padel_app
+Login Admin: app@app.com / 123
+
+SEGURIDAD POST-DESPLIEGUE:
+
+Tareas de Seguridad Obligatorias:
+
+1. Cambiar contraseña de administrador:
+   - Login con app@app.com / 123
+   - Ir a gestión de usuarios
+   - Cambiar a contraseña segura (8+ caracteres, mayúsculas, números, símbolos)
+
+2. Configurar HTTPS:
+   - Activar SSL en cPanel de Bluehost
+   - Forzar redirección HTTPS en .htaccess
+
+3. Configurar backups automáticos:
+   - Activar backups en cPanel
+   - Programar backup de base de datos semanal
+
+4. Generar APP_KEY segura:
+   - Reemplazar "GENERATE_NEW_KEY_FOR_PRODUCTION"
+   - Usar clave de 32 caracteres única
+
+CARACTERÍSTICAS DE LA APLICACIÓN:
+
+Funcionalidades Implementadas:
+- Frontend: Diseño completamente responsivo
+- Mobile: Sin scroll horizontal en dispositivos móviles
+- UX: Tablas optimizadas para todas las pantallas
+- Auth: Sistema de autenticación JWT
+- CRUD: Gestión completa de usuarios, deportistas, clubes, torneos
+- Filters: Filtros inteligentes y búsquedas
+- Security: Roles y permisos por usuario
+
+Roles de Usuario:
+- Administrador: Acceso completo a todas las funciones
+- Asistente: Gestión de deportistas y torneos
+- Club: Gestión de sus propios deportistas
+- Deportista: Vista de información personal
+
+SOPORTE Y MANTENIMIENTO:
+
+En caso de problemas:
+1. Revisar logs de error: cPanel > Error Logs
+2. Verificar configuración: Seguir checklist paso a paso
+3. Probar componentes por separado: API, Frontend, Base de datos
+4. Backup antes de cambios: Siempre hacer respaldo
+
+Mantenimiento Recomendado:
+- Semanal: Verificar logs de error
+- Mensual: Backup completo de base de datos
+- Trimestral: Actualizar dependencias de seguridad
+- Anual: Renovar certificados SSL
+
+DESPLIEGUE COMPLETADO!
+
+Tu aplicación Liga de Padel está lista para producción en Bluehost con todas las mejoras responsivas y de seguridad implementadas.
+
+URL FINAL: https://ligadepadeldebogotaoficial.com/LPBApp
+
+Liga de Padel de Bogotá Oficial
+Guía de Despliegue Técnico - Octubre 2025
+React + PHP/Lumen + MySQL en Bluehost

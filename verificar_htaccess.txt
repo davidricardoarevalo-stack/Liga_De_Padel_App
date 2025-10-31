@@ -1,0 +1,18 @@
+COMANDOS PARA VERIFICAR .htaccess EN BLUEHOST VIA SSH:
+
+1. Conectar via SSH a tu hosting
+2. Navegar al directorio de tu aplicación:
+   cd public_html/LPBApp
+
+3. Listar TODOS los archivos incluyendo ocultos:
+   ls -la
+
+4. Verificar específicamente .htaccess:
+   ls -la .htaccess
+
+5. Ver contenido del archivo:
+   cat .htaccess
+
+6. Si no existe, crearlo:
+   nano .htaccess
+   # Luego pegar el contenido y guardar con Ctrl+X, Y, Enter

@@ -1,0 +1,30 @@
+PERMISOS CORRECTOS PARA BLUEHOST:
+
+ARCHIVOS - PERMISOS 644:
+✓ /public_html/LPBApp/api/public/index.php
+✓ /public_html/LPBApp/api/.env
+✓ /public_html/LPBApp/api/.htaccess
+✓ /public_html/LPBApp/.htaccess
+✓ Todos los archivos .php en api/app/
+✓ Todos los archivos en api/vendor/
+
+DIRECTORIOS - PERMISOS 755:
+✓ /public_html/LPBApp/
+✓ /public_html/LPBApp/api/
+✓ /public_html/LPBApp/api/public/
+✓ /public_html/LPBApp/api/app/
+✓ /public_html/LPBApp/api/vendor/
+✓ /public_html/LPBApp/static/
+
+CÓMO CAMBIAR EN BLUEHOST FILE MANAGER:
+1. Selecciona el archivo/carpeta
+2. Clic derecho → "Change Permissions"
+3. Establece el número correcto (644 o 755)
+4. Para carpetas: marca "Recurse into subdirectories"
+5. Aplica cambios
+
+NOTA IMPORTANTE:
+- 666 en archivos PHP = ERROR 500 ❌
+- 644 en archivos PHP = FUNCIONA ✅
+- 777 en directorios = INSEGURO ❌
+- 755 en directorios = SEGURO ✅

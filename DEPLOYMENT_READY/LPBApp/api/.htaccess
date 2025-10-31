@@ -1,0 +1,18 @@
+Options -MultiViews -Indexes
+RewriteEngine On
+
+# Denegar acceso a archivos sensibles
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "composer.*">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Redirigir todas las peticiones al controlador frontal
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ public/index.php [L]

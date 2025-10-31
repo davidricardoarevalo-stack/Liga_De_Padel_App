@@ -1,0 +1,23 @@
+RewriteEngine On
+
+# DEBUGGING: Allow direct access to test files
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_URI} \.(php|html)$
+RewriteRule ^ - [L]
+
+# API Routes - redirect ONLY /api/ paths that don't exist as files to router
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/(.*)$ api/public/index.php [QSA,L]
+
+# React SPA - handle all other non-file requests
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/LPBApp/api/
+RewriteRule . index.html [L]
+
+# Security
+<Files ".env">
+    Order Allow,Deny
+    Deny from all
+</Files>
