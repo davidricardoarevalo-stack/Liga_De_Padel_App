@@ -1,0 +1,23 @@
+RewriteEngine On
+
+# Simple and effective routing for /LPBApp/ subdirectory
+
+# API Routes - handle /api/something requests
+RewriteRule ^api/(.*)$ api/public/index.php [QSA,L]
+
+# React SPA - handle all other requests that aren't files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/LPBApp/api/
+RewriteRule . index.html [L]
+
+# Security - prevent access to sensitive files
+<Files ".env">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.log">
+    Order Allow,Deny  
+    Deny from all
+</Files>

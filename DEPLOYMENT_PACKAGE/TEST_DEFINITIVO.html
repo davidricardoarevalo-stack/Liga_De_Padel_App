@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TEST DEFINITIVO</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .result { padding: 10px; margin: 5px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>🔍 TEST DEFINITIVO DE CONFIGURACIÓN</h1>
+    <div id="results"></div>
+    
+    <h2>📋 Información del Test:</h2>
+    <p><strong>Fecha:</strong> 31 de Octubre, 2025</p>
+    <p><strong>Propósito:</strong> Determinar si el archivo correcto está cargado</p>
+    
+    <script>
+        const results = document.getElementById('results');
+        
+        function addResult(type, message) {
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+        
+        // Test básico de entorno
+        addResult('info', `🌐 <strong>Hostname:</strong> ${window.location.hostname}`);
+        addResult('info', `📍 <strong>URL completa:</strong> ${window.location.href}`);
+        addResult('info', `📁 <strong>Pathname:</strong> ${window.location.pathname}`);
+        
+        // Detectar si es producción
+        const isProduction = window.location.hostname !== 'localhost';
+        addResult(isProduction ? 'success' : 'info', `🏭 <strong>¿Es producción?</strong> ${isProduction ? 'SÍ' : 'NO'}`);
+        
+        // Simular detección de backend URL
+        let backendUrl;
+        if (isProduction) {
+            backendUrl = './api';
+        } else {
+            backendUrl = 'http://localhost:8080/api';
+        }
+        
+        addResult('info', `🔗 <strong>Backend URL detectada:</strong> ${backendUrl}`);
+        
+        // URL completa que se usaría para API calls
+        const baseUrl = window.location.origin + window.location.pathname;
+        const fullApiUrl = baseUrl + backendUrl.replace('./', '');
+        addResult('info', `🎯 <strong>URL completa para API:</strong> ${fullApiUrl}`);
+        
+        // Test de logo
+        const logoPath = './images/LOGO LIGA DE PADEL DE BOGOTA-03.jpg';
+        const fullLogoUrl = baseUrl + logoPath.replace('./', '');
+        addResult('info', `🖼️ <strong>URL completa del logo:</strong> ${fullLogoUrl}`);
+        
+        // Test de carga de logo
+        const img = new Image();
+        img.onload = function() {
+            addResult('success', '✅ <strong>Logo:</strong> Se carga correctamente');
+        };
+        img.onerror = function() {
+            addResult('error', '❌ <strong>Logo:</strong> NO se puede cargar');
+        };
+        img.src = logoPath;
+        
+        // Test de API health
+        fetch(backendUrl)
+            .then(response => {
+                if (response.ok) {
+                    addResult('success', '✅ <strong>API Health:</strong> Conecta correctamente');
+                } else {
+                    addResult('error', `❌ <strong>API Health:</strong> Error ${response.status}`);
+                }
+            })
+            .catch(error => {
+                addResult('error', `❌ <strong>API Health:</strong> ${error.message}`);
+            });
+        
+        // Información sobre archivos JavaScript cargados
+        const scripts = document.querySelectorAll('script[src]');
+        addResult('info', `📜 <strong>Scripts cargados:</strong> ${scripts.length}`);
+        scripts.forEach((script, index) => {
+            addResult('info', `📜 Script ${index + 1}: ${script.src}`);
+        });
+        
+        // Test final - verificar si React está cargado (indicaría que main.js se cargó)
+        setTimeout(() => {
+            if (window.React) {
+                addResult('success', '✅ <strong>React:</strong> Cargado correctamente');
+            } else {
+                addResult('error', '❌ <strong>React:</strong> NO está cargado');
+            }
+        }, 2000);
+        
+    </script>
+</body>
+</html>

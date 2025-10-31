@@ -1,0 +1,15 @@
+# Cache busting para archivos JS y CSS
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType application/javascript "access plus 0 seconds"
+    ExpiresByType text/css "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Forzar revalidación de archivos JS y CSS
+    <FilesMatch "\.(js|css)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires 0
+    </FilesMatch>
+</IfModule>

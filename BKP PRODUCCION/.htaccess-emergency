@@ -1,0 +1,16 @@
+RewriteEngine On
+
+# EMERGENCY VERSION - Minimal routing
+# Only redirect /api/login (not files like login.php) to router
+
+# Allow direct file access
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Only redirect virtual API paths (no file extension) to router
+RewriteRule ^api/([^.]+)$ api/public/index.php [QSA,L]
+
+# React SPA
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.html [L]

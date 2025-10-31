@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test de Configuración</title>
+</head>
+<body>
+    <h1>Test de Configuración del Frontend</h1>
+    <p>Abre Developer Tools (F12) y ve a Console para ver los resultados.</p>
+    
+    <script>
+        // Test para verificar la configuración
+        console.log("=== TEST DE CONFIGURACIÓN ===");
+        
+        // Simular la detección de entorno que hace la app
+        const isProduction = window.location.hostname !== 'localhost';
+        console.log("¿Es producción?", isProduction);
+        console.log("Hostname actual:", window.location.hostname);
+        
+        let backendUrl;
+        if (isProduction) {
+            backendUrl = './api';
+        } else {
+            backendUrl = 'http://localhost:8080/api';
+        }
+        
+        console.log("Backend URL que debería usar:", backendUrl);
+        console.log("URL completa para clubes sería:", window.location.origin + window.location.pathname + backendUrl.replace('./', '') + '/clubs');
+        
+        // Test de rutas de imágenes
+        const logoPath = './images/LOGO LIGA DE PADEL DE BOGOTA-03.jpg';
+        console.log("Ruta del logo:", logoPath);
+        console.log("URL completa del logo:", window.location.origin + window.location.pathname + logoPath.replace('./', ''));
+        
+        console.log("=== FIN TEST ===");
+    </script>
+</body>
+</html>
