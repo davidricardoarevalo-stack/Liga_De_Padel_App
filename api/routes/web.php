@@ -4,6 +4,9 @@
  */
 $router = $app->router;
 
+// Health check route
+$router->get('/', 'AuthController@healthCheck');
+
 $router->post('/login', 'AuthController@login');
 $router->post('/register', 'AuthController@register');
 $router->get('/profile', ['middleware' => 'auth', 'uses' => 'AuthController@profile']);

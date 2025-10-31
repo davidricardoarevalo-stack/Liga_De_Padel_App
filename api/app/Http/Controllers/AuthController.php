@@ -35,6 +35,11 @@ class AuthController extends Controller {
             $this->jsonResponse(['error' => 'Invalid credentials'], 401);
         }
         
+        // Verificar que el usuario esté activo
+        if ($user->status && strtolower($user->status) === 'inactivo') {
+            $this->jsonResponse(['error' => 'Usuario inactivo. Contacte al administrador.'], 403);
+        }
+        
         $token = $this->makeToken($user);
         $this->jsonResponse(['token' => $token, 'user' => $user]);
     }
@@ -98,6 +103,25 @@ class AuthController extends Controller {
             'user_id' => $_SESSION['auth_user_id'] ?? null,
             'user_role' => $_SESSION['auth_user_role'] ?? null,
             'headers' => getallheaders()
+        ]);
+    }
+    
+    public function healthCheck() {
+        // Health check for development
+        $this->jsonResponse([
+            'status' => 'OK',
+            'message' => 'Liga de Padel API - Development Environment',
+            'time' => date('Y-m-d H:i:s'),
+            'environment' => 'development',
+            'endpoints' => [
+                'POST /login' => 'User authentication',
+                'POST /register' => 'User registration', 
+                'GET /profile' => 'Get user profile (requires auth)',
+                'GET /athletes' => 'List athletes (requires auth)',
+                'GET /clubs' => 'List clubs (requires auth)',
+                'GET /tournaments' => 'List tournaments',
+                'GET /users' => 'List users (admin only)'
+            ]
         ]);
     }
 }

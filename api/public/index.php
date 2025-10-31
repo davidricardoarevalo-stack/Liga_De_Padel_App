@@ -20,6 +20,7 @@ error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 // Set CORS headers immediately - Dynamic origin for dev/production
 $allowedOrigins = [
     'http://localhost:3000',  // Development
+    'http://localhost:3001',  // Development (alternate port)
     'https://ligadepadeldebogotaoficial.com'  // Production
 ];
 
